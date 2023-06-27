@@ -1,6 +1,6 @@
 # podAi
 
-This is a Python project that utilizes the FastAPI framework to create a web application with several endpoints. The app provides functionalities to retrieve and update item information, as well as ask questions and generate responses using OpenAI's language models. Additionally, the app includes text-to-speech capabilities and the ability to upload audio files to an Amazon S3 bucket.
+This is a Python project that utilizes the FastAPI framework to create a web application with several endpoints. The app provides functionalities to retrieve and update item information, as well as ask questions and generate responses using OpenAI's language models. Additionally, the app includes text-to-speech capabilities and the ability to upload audio files to an Amazon S3 bucket. (Under active development)
 
 ### Prerequisites
 - Python 3.x
