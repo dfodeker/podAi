@@ -30,6 +30,12 @@ async def read_root():
     print(openai.api_key)
     return {"Hello": "World"}
    
+  # Initialize your ASR handler
+
+@app.get("/transcribe")
+async def transcribe(file_path: str):
+    return {"file_path": file_path}
+
 
 
 @app.get("/items/{item_id}")
