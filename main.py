@@ -6,10 +6,15 @@ import openai
 import os
 import requests
 import boto3
+from dotenv import load_dotenv
+load_dotenv()
 
-openai.api_key = ""
-xi_api_key = ""
-url = "https://api.elevenlabs.io/v1/text-to-speech/<voice_id>"
+url= os.environ.get('URL')
+openai.api_key = os.environ.get('OPENAI_KEY')
+xi_api_key = os.environ.get('XI_API_KEY')
+s3_endpoint = os.environ.get('S3_BUCKET')
+aws_access_key = os.environ.get('AWS_ACCESS_KEY')
+aws_secret_key = os.environ.get('AWS_SECRET_KEY')
 
 app = FastAPI()
 
@@ -22,6 +27,7 @@ class Item(BaseModel):
 
 @app.get("/")
 async def read_root():
+    print(openai.api_key)
     return {"Hello": "World"}
    
 
@@ -56,7 +62,7 @@ async def ask2(question: str):
    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=conversation,
-        max_tokens=10
+        max_tokens=1
     )
    speak = response.choices[0].message['content'].strip()
    print(speak)
@@ -95,10 +101,10 @@ def textToSpeech(speak: str):
 def uploadAudio(file_path: str):
     counter = 1 
     session = boto3.Session(
-         aws_access_key_id = '',
-         aws_secret_access_key = ''
+         aws_access_key_id = aws_access_key,
+         aws_secret_access_key = aws_secret_key
         )
-    s3 = session.client('s3', endpoint_url='')
+    s3 = session.client('s3', endpoint_url=s3_endpoint)
 
     bucket_name = 'ai-bucket'  # Replace with your bucket name
     object_key = f'output{counter}.mp3'
