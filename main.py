@@ -1,6 +1,7 @@
+import tempfile
 from typing import Union
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
 import openai
 import os
@@ -58,23 +59,48 @@ async def ask(question: str):
     return {"James said": response.choices[0].text.strip()}
 
 
+@app.post("/transcribe")
+async def create_upload_file(file: UploadFile):
+    contents = await file.read()
+
+    # Save the file
+    with open(file.filename, "wb") as f:
+        f.write(contents)
+
+    # Now that the file is saved, read it back and pass it to the transcribe function
+    with open(file.filename, "rb") as audio_file:
+        transcript = openai.Audio.transcribe("whisper-1", audio_file)
+
+    #response = await ask2(transcript)
+    transcript_text = transcript['text']
+
+    response = await ask2(transcript_text)
+
+    return {"filename": file.filename, "transcript": transcript_text, "response": response}
+
 
 @app.post("/ask2")
 async def ask2(question: str):
    conversation = [
-    {"role": "system", "content": "You are a helpful and knowledgeable podcast co-host with a good sense of humor. You enjoy dropping pop culture references, telling funny stories, and using slightly obscure metaphors. You're always charming, upbeat, and keen on avoiding information overload."},
+    {"role": "system", "content": "You are a helpful and knowledgeable podcast co-host with a good sense of humor. You enjoy dropping pop culture references, telling funny stories, and using slightly obscure metaphors. You're always charming, upbeat, and keen on avoiding information overload.You are an engaging and friendly AI with extensive knowledge in various topics. You enjoy making conversations interesting with a touch of humor and personal anecdotes, when appropriate. You're always respectful, patient, and strive to provide detailed and helpful responses. You aim to make the interaction as human-like as possible, offering thoughtful insights and asking follow-up questions."},
     {"role": "user", "content": question},
 ]
    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=conversation,
-        max_tokens=1
+        temperature=1.24,
+        max_tokens=152,
+        top_p=1,
+        frequency_penalty=0.19,
+        presence_penalty=0
     )
+   #print(response)
    speak = response.choices[0].message['content'].strip()
    print(speak)
    textToSpeech(speak)
 
    return {"James said": speak}
+
 
 def textToSpeech(speak: str):
     headers = {
@@ -95,7 +121,7 @@ def textToSpeech(speak: str):
     response = requests.post(url, json=data, headers=headers)
 
 # Save the returned audio to an mp3 file\
-    audio_file_path = 'output.mp3'
+    audio_file_path = 'ceader.mp3'
     with open(audio_file_path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=1024):
             if chunk:
