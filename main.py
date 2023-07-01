@@ -7,9 +7,16 @@ import openai
 import os
 import requests
 import boto3
+from supabase import create_client, Client
+
+
+
+
 from dotenv import load_dotenv
 load_dotenv()
-
+SupaUrl = os.environ.get("SUPABASE_URL")
+key = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(SupaUrl, key)
 url= os.environ.get('URL')
 openai.api_key = os.environ.get('OPENAI_KEY')
 xi_api_key = os.environ.get('XI_API_KEY')
@@ -24,7 +31,24 @@ class Item(BaseModel):
     price: float
     is_offer: Union[bool, None] = None
 
+class Interaction(BaseModel):
+    user_id: str
+    user_input: str
 
+@app.post("/interact")
+async def interact(interaction: Interaction):
+    # Get the last interaction from this user.
+    
+    past_interactions = supabase.table('interactions').select('user_id','user_input').execute()
+    
+    #we need an algo to search through interactions for similar user input similar denoting a high probability of same topic
+    #if similar is found we use the similarity to determine "main theme" of the conversation and use that to determine the prompt
+    #if no similar is found we craft a completely new prompt
+    #we then use the prompt to generate a response
+
+    # Prepare the prompt for GPT-4.
+    
+    return {'prompt': past_interactions,}
 
 @app.get("/")
 async def read_root():
@@ -47,6 +71,8 @@ async def read_item(item_id: int, q: Union[str, None] = None):
 async def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
+
+   
 
 @app.post("/ask")
 async def ask(question: str):
@@ -89,15 +115,15 @@ async def ask2(question: str):
         model="gpt-3.5-turbo-16k",
         messages=conversation,
         temperature=1.24,
-        max_tokens=152,
+        max_tokens=64,
         top_p=1,
         frequency_penalty=0.19,
         presence_penalty=0
     )
-   #print(response)
+   print(response)
    speak = response.choices[0].message['content'].strip()
    print(speak)
-   textToSpeech(speak)
+   #textToSpeech(speak)
 
    return {"James said": speak}
 
