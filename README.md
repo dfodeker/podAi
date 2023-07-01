@@ -67,3 +67,8 @@ Please note that this project relies on external services and APIs (FastAPI, Ope
 ### Acknowledgments
 
 This project utilizes the FastAPI framework and OpenAI's language models to provide a web application with advanced language processing capabilities. The text-to-speech functionality is powered by the Eleven Labs API, and the audio file uploads are facilitated by Amazon S3.
+
+### Thoughts
+ 
+Considering using whisper-x for transcriptions to reduce the number of API calls to OpenAI.
+thinking about ways to improve the conversation flow and make it more natural by remembering previous interactions
