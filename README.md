@@ -2,6 +2,9 @@
 
 This is a Python project that utilizes the FastAPI framework to create a web application with several endpoints. The app provides functionalities to retrieve and update item information, as well as ask questions and generate responses using OpenAI's language models. Additionally, the app includes text-to-speech capabilities and the ability to upload audio files to an Amazon S3 bucket. (Under active development)
 
+
+
+
 ### Prerequisites
 - Python 3.x
 - FastAPI
@@ -57,12 +60,18 @@ The application will be accessible at `http://localhost:8000`.
    - Converts the generated response to speech using text-to-speech capabilities and saves the audio file.
    - Uploads the audio file to an Amazon S3 bucket.
    - Returns a JSON response with the generated response and the file path of the uploaded audio file.
+6. `POST /transcribe`   
+   - Accepts an audio file, transcribes it, and generates a response based on the transcribed text.
 
-### License
 
-This project is licensed under the [MIT License](LICENSE).
 
-Please note that this project relies on external services and APIs (FastAPI, OpenAI, and AWS), which have their own respective terms and conditions. Ensure compliance with their terms and conditions when using this project.
+## Features in Development
+
+- **Similarity Detection**: Uses NLP techniques such as Semantic Similarity with Transformer models, TF-IDF, and Siamese Networks to search through past interactions for input similar to the current user input.
+- **Topic Extraction**: Incorporates topic modeling techniques such as LDA, NMF, and BERTopic to determine the main theme of the conversation from similar past interactions.
+- **Emotion in Voice Synthesis**: Utilizes advanced speech synthesis technologies and prosody modification to create voices with depth and emotion, aspiring to match the quality of systems like Sonantic.
+
+
 
 ### Acknowledgments
 
