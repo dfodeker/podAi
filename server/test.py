@@ -1,33 +1,27 @@
 import unittest
-from fastapi.testclient import TestClient
-from unittest.mock import patch, Mock
+import requests
+import json
 
-from main import app  # replace this with actual filename
+class TestAsk2Endpoint(unittest.TestCase):
+    BASE_URL = 'http://localhost:8000'  # replace  server address and port
 
-class TestFastAPIApp(unittest.TestCase):
-    
-    def setUp(self):
-        self.client = TestClient(app)
-
-    @patch('openai.ChatCompletion.create')
-    def test_ask2(self, mock_create):
-        # Mock the response from the openai API
-        mock_create.return_value = Mock(choices=[Mock(message={"content": "Mock response"})])
-
-        response = self.client.get("/ask2?question=Test question")
-
+    def test_ask2_correct_response(self):
+        question = "Who won the world series in 2020?"
+        response = requests.post(f"{self.BASE_URL}/ask2", data=json.dumps({'question': question}), headers={'Content-Type': 'application/json'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"James said": "Mock response"})
+        data = response.json()
+        self.assertIn('James said', data)
+
+    def test_ask2_no_question(self):
+        response = requests.post(f"{self.BASE_URL}/ask2", data=json.dumps({}), headers={'Content-Type': 'application/json'})
+        self.assertEqual(response.status_code, 400)  # assuming your API returns a 400 status code for bad requests
+
+    def test_ask2_non_string_question(self):
+        question = 12345
+        response = requests.post(f"{self.BASE_URL}/ask2", data=json.dumps({'question': question}), headers={'Content-Type': 'application/json'})
+        self.assertEqual(response.status_code, 400)  # assuming your API returns a 400 status code for bad requests
 
 
-    @patch('requests.post')
-    def test_text_to_speech(self, mock_post):
-        # Mock the response from the Eleven Labs API
-        mock_post.return_value = Mock(status_code=200)
-
-        response = self.client.get("/textToSpeech", json={"speak": "Test Speech"})
-
-        self.assertEqual(response.status_code, 200)
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
+

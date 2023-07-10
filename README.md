@@ -1,8 +1,14 @@
 # podAi
 
-This is a Python project that utilizes the FastAPI framework to create a web application with several endpoints. The app provides functionalities to retrieve and update item information, as well as ask questions and generate responses using OpenAI's language models. Additionally, the app includes text-to-speech capabilities and the ability to upload audio files to an Amazon S3 bucket. (Under active development)
+## Overview
+This project aims to revolutionize podcast interactions using advanced AI technologies. Leveraging OpenAI's GPT-3 model and voice synthesis technologies, the project brings about a truly interactive podcast experience. By employing techniques like Similarity Detection and Topic Extraction, the AI assistant can provide engaging, relevant, and on-point responses to user inputs.
 
+## Features
 
+- **Similarity Detection**: The AI assistant can search through past interactions for user input that closely aligns with the current user's input. This is accomplished using state-of-the-art Natural Language Processing (NLP) techniques such as word embeddings.
+
+- **Topic Extraction**: Once similar past interactions are found, the AI assistant uses these interactions to determine the main theme of the conversation. Topic Extraction is facilitated using NLP techniques such as Latent Dirichlet Allocation (LDA), Named Entity Recognition (NER), or keyword extraction.
+  
 
 
 ### Prerequisites
