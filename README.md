@@ -3,12 +3,7 @@
 ## Overview
 This project aims to revolutionize podcast interactions using advanced AI technologies. Leveraging OpenAI's GPT-3 model and voice synthesis technologies, the project brings about a truly interactive podcast experience. By employing techniques like Similarity Detection and Topic Extraction, the AI assistant can provide engaging, relevant, and on-point responses to user inputs.
 
-## Features
 
-- **Similarity Detection**: The AI assistant can search through past interactions for user input that closely aligns with the current user's input. This is accomplished using state-of-the-art Natural Language Processing (NLP) techniques such as word embeddings.
-
-- **Topic Extraction**: Once similar past interactions are found, the AI assistant uses these interactions to determine the main theme of the conversation. Topic Extraction is facilitated using NLP techniques such as Latent Dirichlet Allocation (LDA), Named Entity Recognition (NER), or keyword extraction.
-  
 
 
 ### Prerequisites
@@ -76,7 +71,7 @@ The application will be accessible at `http://localhost:8000`.
 - **Similarity Detection**: Uses NLP techniques such as Semantic Similarity with Transformer models, TF-IDF, and Siamese Networks to search through past interactions for input similar to the current user input.
 - **Topic Extraction**: Incorporates topic modeling techniques such as LDA, NMF, and BERTopic to determine the main theme of the conversation from similar past interactions.
 - **Emotion in Voice Synthesis**: Utilizes advanced speech synthesis technologies and prosody modification to create voices with depth and emotion, aspiring to match the quality of systems like Sonantic.
-
+- **Client application **: to interface with the project ans allow users use their own api tokens to interface with the services.
 
 
 ### Acknowledgments
