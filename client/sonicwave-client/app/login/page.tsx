@@ -2,19 +2,24 @@
 import React,{useState,useEffect} from "react";
 import qs from 'qs';
 import axios from "axios";
-import Router from 'next/router';
+import{useRouter} from "next/navigation"
+import ErrorComponent from "./error";
+
+
 
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-   
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter();
+
 
     useEffect(() => {
       if (isLoggedIn) {
         // Redirect to the dashboard page
-        Router.push('/dashboard');
+        router.push('/');
       }
     }, [isLoggedIn]);
   
@@ -39,32 +44,58 @@ function Login() {
         data: data
       };
   
-      axios(config)
-        .then((response) => {
-          console.log(response.data);
-          localStorage.setItem('token', response.data.access_token);
-          console.log(localStorage.getItem('token'));
-  
-          // Redirect to the dashboard page
-          Router.push('/dashboard');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      try {
+        const response = await axios(config);
+        localStorage.setItem('token', response.data.access_token);
+        router.push('/dashboard');
+    } catch (err) {
+        setError("Your credentials might be wrong!");  //Setting error state
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
-      </label>
-      <label>
-        Password:
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-      </label>
-      <input type="submit" value="Submit" />
-    </form>
+    <>
+    
+    <div className='h-screen flex bg-gray-bg1'>
+            <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16'>
+                <h1 className='text-2xl font-medium text-slate-950 mt-4 mb-12 text-center'>
+                    Log in to your account 🔐
+                </h1>
+
+                <form onSubmit={handleSubmit}>
+                {error && <ErrorComponent errorMsg={error} />}
+                    <div>
+                        <label htmlFor='username'>Username</label>
+                        <input
+                           type="text" value={username} onChange={e => setUsername(e.target.value)}
+                            className={`w-full p-2  text-slate-950  border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                            id='username'
+                            placeholder='Your Username'
+                            
+                        />
+                    </div>
+                    <div >
+                        <label htmlFor='password'>Password</label>
+                        <input
+                            type='password'
+                            className={`w-full p-2  text-slate-950  border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                            id='password'
+                            placeholder='Your Password'
+                            value={password} onChange={e => setPassword(e.target.value)}
+                        />
+                    </div>
+
+                    <div className='flex justify-center items-center mt-6'>
+                        <button
+                            className={`bg-green-600 py-2 px-4 text-sm text-white rounded border border-green focus:outline-none focus:border-green-dark`}
+                        >
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </>
   );
 }
 
