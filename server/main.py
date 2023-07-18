@@ -16,12 +16,30 @@ from jose import JWTError, jwt
 from jose import jwt
 from passlib.context import CryptContext
 from fastapi.middleware.cors import CORSMiddleware
-
+from pydantic import BaseSettings
 
 
 
 from dotenv import load_dotenv
 load_dotenv()
+
+
+class Settings(BaseSettings):
+    SUPABASE_URL: str
+    AWS_ACCESS_KEY: str
+    OPENAI_KEY: str
+    S3_BUCKET: str
+    AWS_ACCESS_KEY: str
+    AWS_SECRET_KEY: str
+    URL: str
+    SECRET_KEY: str
+    
+    class Config:
+        env_file = '.env'
+   
+def get_settings():
+    return Settings()
+
 SupaUrl = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SupaUrl, key)
@@ -198,9 +216,9 @@ async def interact(interaction: Interaction):
     return {'prompt': past_interactions,}
 
 @app.get("/")
-async def read_root():
-    print(openai.api_key)
-    return {"Hello": "World"}
+async def read_root(settings: Settings = Depends(get_settings)):
+    print(settings.SUPABASE_URL)
+    return{"SUPABASE_URL": settings.SUPABASE_URL}
    
   # Initialize your ASR handler
 
@@ -270,7 +288,7 @@ async def ask2(question: str):
    print(response)
    speak = response.choices[0].message['content'].strip()
    print(speak)
-   #textToSpeech(speak)
+   textToSpeech(speak)
 
    return {"James said": speak}
 
