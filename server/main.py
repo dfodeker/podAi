@@ -1,6 +1,7 @@
 import tempfile
 from datetime import datetime, timedelta
 from typing import Union
+from httpx import HTTPStatusError
 from pydantic import BaseModel
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
@@ -116,9 +117,35 @@ app.add_middleware(
 
 @app.post("/sign_in")
 async def sign_in(email: str, password: str):
-       response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-       print(response)
-
+    try:
+        response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        
+        if 'error' in response:
+            # Log the error message for debugging purposes
+            print(f"Sign in error: {response['error'].get('message')}")
+            
+            # Raise an HTTPException to return a 401 Unauthorized response
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid email or password",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        else:
+            return response.session.access_token
+    except HTTPStatusError as error:
+        if error.response.status_code == 400:
+            # Log the error message for debugging purposes
+            print(f"HTTPStatusError: {error}")
+            
+            # Raise an HTTPException to return a 400 Bad Request response
+            raise HTTPException(
+                status_code=400,
+                detail="Bad request",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        else:
+            # If it's not a 400 error, re-raise the exception
+            raise
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
