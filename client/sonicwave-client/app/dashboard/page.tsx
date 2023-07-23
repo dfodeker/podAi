@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
       router.push('/login');
       return;
     }
-    
+    // If there is a token, try to fetch the user
     try {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
