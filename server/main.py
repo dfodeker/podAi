@@ -23,7 +23,7 @@ from pydantic import BaseSettings
 
 from dotenv import load_dotenv
 load_dotenv()
-
+#ft dashboard
 
 class Settings(BaseSettings):
     SUPABASE_URL: str
