@@ -323,12 +323,12 @@ async def ask2(question: str):
    print(response)
    speak = response.choices[0].message['content'].strip()
    print(speak)
-   textToSpeech(speak)
+   text_to_speech(speak)
 
    return {"James said": speak}
 
 
-def textToSpeech(speak: str):
+def text_to_speech(speak: str):
     headers = {
         "Accept": "audio/mpeg",
          "Content-Type": "application/json",
@@ -353,10 +353,10 @@ def textToSpeech(speak: str):
             if chunk:
                 f.write(chunk)
     
-        uploadAudio(audio_file_path) 
+        upload_audio(audio_file_path) 
         return {"James said": speak, "file_path": audio_file_path}
    
-def uploadAudio(file_path: str):
+def upload_audio(file_path: str):
     counter = 1 
     session = boto3.Session(
          aws_access_key_id = aws_access_key,
