@@ -43,7 +43,7 @@ function Login() {
         },
         data: data
       };
-  
+  //db supabase
       try {
         const response = await axios(config);
         localStorage.setItem('token', response.data.access_token);
@@ -70,7 +70,7 @@ function Login() {
                            type="text" value={username} onChange={e => setUsername(e.target.value)}
                             className={`w-full p-2  text-slate-950  border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                             id='username'
-                            placeholder='Your Username'
+                            placeholder='Your Username 🥹'
                             
                         />
                     </div>
