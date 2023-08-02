@@ -24,6 +24,9 @@ from pydantic import BaseSettings
 from dotenv import load_dotenv
 load_dotenv()
 #ft dashboard
+#https://app.supabase.io/project/ai-1qjxq/settings/api
+#considerations to be made around app architecture to be a sass
+#plans to follow 
 
 class Settings(BaseSettings):
     SUPABASE_URL: str
