@@ -24,7 +24,7 @@ from pydantic import BaseSettings
 from dotenv import load_dotenv
 load_dotenv()
 #ft dashboard
-#https://app.supabase.io/project/ai-1qjxq/settings/api
+#
 #considerations to be made around app architecture to be a sass
 #plans to follow 
 
@@ -303,13 +303,13 @@ async def create_upload_file(file: UploadFile):
     #response = await ask2(transcript)
     transcript_text = transcript['text']
 
-    response = await ask2(transcript_text)
+    response = await ask_2(transcript_text)
 
     return {"filename": file.filename, "transcript": transcript_text, "response": response}
 
 
 @app.post("/ask2")
-async def ask2(question: str):
+async def ask_2(question: str):
    conversation = [
     {"role": "system", "content": "You are a helpful and knowledgeable podcast co-host with a good sense of humor. You enjoy dropping pop culture references, telling funny stories, and using slightly obscure metaphors. You're always charming, upbeat, and keen on avoiding information overload.You are an engaging and friendly AI with extensive knowledge in various topics. You enjoy making conversations interesting with a touch of humor and personal anecdotes, when appropriate. You're always respectful, patient, and strive to provide detailed and helpful responses. You aim to make the interaction as human-like as possible, offering thoughtful insights and asking follow-up questions."},
     {"role": "user", "content": question},
